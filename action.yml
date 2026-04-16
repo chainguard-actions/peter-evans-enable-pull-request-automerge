@@ -1,0 +1,38 @@
+name: 'Enable Pull Request Automerge'
+description: 'A GitHub action to enable auto-merge on a pull request'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    default: ${{ github.token }}
+  repository:
+    description: 'The target GitHub repository containing the pull request'
+    default: ${{ github.repository }}
+  pull-request-number:
+    description: 'The number of the target pull request'
+    required: true
+  merge-method:
+    description: 'The merge method to use. `merge`, `rebase` or `squash`.'
+    default: merge
+runs:
+  using: composite
+  steps:
+    - name: Lowercase
+      id: lowercase
+      shell: bash
+      env:
+        MERGE_METHOD: ${{ inputs.merge-method }}
+      run: |
+        safe=$(printf '%s' "$MERGE_METHOD" | tr '[:upper:]' '[:lower:]' | tr -d '\n\r')
+        echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
+
+    - name: Enable automerge
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        REPOSITORY: ${{ inputs.repository }}
+        MERGE_METHOD: ${{ steps.lowercase.outputs.merge-method }}
+        PR_NUMBER: ${{ inputs.pull-request-number }}
+      run: gh pr merge -R "$REPOSITORY" --"$MERGE_METHOD" --auto "$PR_NUMBER"
+branding:
+  icon: 'git-pull-request'
+  color: 'gray-dark'

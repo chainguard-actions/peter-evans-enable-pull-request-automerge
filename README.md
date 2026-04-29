@@ -1,5 +1,7 @@
 # peter-evans/enable-pull-request-automerge
 
+A GitHub action to enable auto-merge on a pull request
+
 Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/peter-evans/enable-pull-request-automerge](https://github.com/peter-evans/enable-pull-request-automerge).
 
 ## Versions

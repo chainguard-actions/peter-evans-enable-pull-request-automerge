@@ -1,4 +1,6 @@
 {
-  "upstream": "peter-evans/enable-pull-request-automerge",
-  "version": "v3.0.0"
+  "owner": "peter-evans",
+  "repo": "enable-pull-request-automerge",
+  "version": "",
+  "url": "https://github.com/peter-evans/enable-pull-request-automerge"
 }

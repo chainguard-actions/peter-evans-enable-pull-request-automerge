@@ -1,7 +1,0 @@
-{
-  "owner": "peter-evans",
-  "name": "enable-pull-request-automerge",
-  "visibility": "public",
-  "description": "A GitHub action to enable auto-merge on a pull request",
-  "block_publish": false
-}

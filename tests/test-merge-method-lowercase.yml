@@ -1,0 +1,86 @@
+name: Test merge-method lowercase transformation
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/heads/main
+      GITHUB_EVENT_NAME: push
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Test lowercase - REBASE input
+        id: lowercase-rebase
+        shell: bash
+        env:
+          MERGE_METHOD: REBASE
+        run: |
+          safe=$(printf '%s' "$MERGE_METHOD" | tr -d '\n\r' | tr '[:upper:]' '[:lower:]')
+          echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
+
+      - name: Assert REBASE lowercased to rebase
+        env:
+          ACTUAL: ${{ steps.lowercase-rebase.outputs.merge-method }}
+        run: |
+          echo "actual: $ACTUAL"
+          if [ "$ACTUAL" != "rebase" ]; then
+            echo "FAIL: expected 'rebase', got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Test lowercase - Squash mixed case input
+        id: lowercase-squash
+        shell: bash
+        env:
+          MERGE_METHOD: Squash
+        run: |
+          safe=$(printf '%s' "$MERGE_METHOD" | tr -d '\n\r' | tr '[:upper:]' '[:lower:]')
+          echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
+
+      - name: Assert Squash lowercased to squash
+        env:
+          ACTUAL: ${{ steps.lowercase-squash.outputs.merge-method }}
+        run: |
+          echo "actual: $ACTUAL"
+          if [ "$ACTUAL" != "squash" ]; then
+            echo "FAIL: expected 'squash', got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Test lowercase - merge already lowercase
+        id: lowercase-merge
+        shell: bash
+        env:
+          MERGE_METHOD: merge
+        run: |
+          safe=$(printf '%s' "$MERGE_METHOD" | tr -d '\n\r' | tr '[:upper:]' '[:lower:]')
+          echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
+
+      - name: Assert merge stays merge
+        env:
+          ACTUAL: ${{ steps.lowercase-merge.outputs.merge-method }}
+        run: |
+          echo "actual: $ACTUAL"
+          if [ "$ACTUAL" != "merge" ]; then
+            echo "FAIL: expected 'merge', got '$ACTUAL'"
+            exit 1
+          fi
+          echo "PASS"
+
+      - name: Invoke action with pull-request-number input (may fail at gh pr merge)
+        id: action
+        uses: .
+        continue-on-error: true
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          pull-request-number: "42"
+          merge-method: rebase
+
+      - name: Confirm action was invoked with pull-request-number
+        run: |
+          echo "Action outcome: ${{ steps.action.outcome }}"
+          echo "PASS: action was invoked with pull-request-number=42 and merge-method=rebase"

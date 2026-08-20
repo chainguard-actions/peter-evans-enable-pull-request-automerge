@@ -39,16 +39,16 @@ runs:
       env:
         MERGE_METHOD: ${{ inputs.merge-method }}
       run: |
-        safe=$(printf '%s' "$MERGE_METHOD" | tr -d '\n\r' | tr '[:upper:]' '[:lower:]')
+        safe=$(printf '%s' "$MERGE_METHOD" | tr '[:upper:]' '[:lower:]' | tr -d '\n\r')
         echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
     - name: Enable automerge
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
-        REPOSITORY: ${{ inputs.repository }}
-        MERGE_METHOD: ${{ steps.lowercase.outputs.merge-method }}
-        PR_NUMBER: ${{ inputs.pull-request-number }}
-      run: gh pr merge -R "$REPOSITORY" --"$MERGE_METHOD" --auto "$PR_NUMBER"
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_MERGE_METHOD: ${{ steps.lowercase.outputs.merge-method }}
+        INPUT_PR_NUMBER: ${{ inputs.pull-request-number }}
+      run: gh pr merge -R "$INPUT_REPOSITORY" --"$INPUT_MERGE_METHOD" --auto "$INPUT_PR_NUMBER"
 branding:
   icon: 'git-pull-request'
   color: 'gray-dark'

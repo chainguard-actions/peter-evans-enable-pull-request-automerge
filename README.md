@@ -8,6 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
+| v1.2.0 | [`v1.2.0`](https://github.com/chainguard-actions/peter-evans-enable-pull-request-automerge/tree/v1.2.0) | [`21d45e1`](https://github.com/peter-evans/enable-pull-request-automerge/commit/21d45e1c52f5d111d2019b5d33f953ed2e735c46) |
 | v3.0.0 | [`v3.0.0`](https://github.com/chainguard-actions/peter-evans-enable-pull-request-automerge/tree/v3.0.0) | [`a660677`](https://github.com/peter-evans/enable-pull-request-automerge/commit/a660677d5469627102a1c1e11409dd063606628d) |
 
 ## Privacy

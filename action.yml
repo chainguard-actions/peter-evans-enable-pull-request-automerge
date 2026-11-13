@@ -41,6 +41,7 @@ runs:
       run: |
         safe=$(printf '%s' "$MERGE_METHOD" | tr '[:upper:]' '[:lower:]' | tr -d '\n\r')
         echo "merge-method=$safe" >> "$GITHUB_OUTPUT"
+
     - name: Enable automerge
       shell: bash
       env:
